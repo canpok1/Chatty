@@ -1,0 +1,20 @@
+apply plugin: 'war'
+apply plugin: 'jetty'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+}
+
+def defaultEncoding = 'UTF-8'
+[compileJava, compileTestJava, javadoc]*.options*.encoding = defaultEncoding
+
+jettyRun {
+    httpPort = 8080
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
+}

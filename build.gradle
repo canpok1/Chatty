@@ -1,18 +1,38 @@
 apply plugin: 'war'
-apply plugin: 'jetty'
+apply plugin: 'jettyEclipse'
+apply plugin: 'eclipse'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    
+    dependencies {
+        classpath (group: 'com.sahlbach.gradle', name: 'gradle-jetty-eclipse-plugin', version: '1.9.+')
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
 }
 
 def defaultEncoding = 'UTF-8'
 [compileJava, compileTestJava, javadoc]*.options*.encoding = defaultEncoding
 
-jettyRun {
-    httpPort = 8080
+war {
+    baseName = 'Chatty'
+    archiveName = 'Chatty'
+    from 'war'
+
+    manifest {
+        attributes 'Implementation-Title': 'Chatty'
+        attributes 'Implementation-Version': '1.0.0'
+        attributes provider: 'gradle'
+    }
 }
 
 task wrapper(type: Wrapper) {

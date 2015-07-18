@@ -17,7 +17,10 @@ repositories {
 }
 
 dependencies {
-    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+    compile 'javax.servlet:javax.servlet-api:3.1.0'
+    providedCompile ('org.eclipse.jetty:jetty-runner:9.3.0.M2') {
+	exclude module : 'javax.servlet'
+    }
 }
 
 def defaultEncoding = 'UTF-8'
@@ -35,6 +38,18 @@ war {
     }
 }
 
+jar {
+    baseName = 'Chatty'
+    version = '1.0.0'
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
 }
+
+task copyJetty(type: Copy) {
+    into "$buildDir/jetty"
+    from configurations.providedCompile
+}
+
+task stage(dependsOn: ['clean', 'build', 'copyJetty'])
